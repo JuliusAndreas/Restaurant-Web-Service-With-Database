@@ -26,6 +26,10 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Food> foods;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User user;
+
     public Restaurant(String restaurantName) {
         this.restaurantName = restaurantName;
     }

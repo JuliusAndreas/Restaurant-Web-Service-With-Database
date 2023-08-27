@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.FoodQuantity;
 
 @Getter
@@ -21,6 +22,7 @@ public class Food {
     @Column(name = "foodName")
     private String foodName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "foodQuantity")
     private FoodQuantity foodQuantity;
 
