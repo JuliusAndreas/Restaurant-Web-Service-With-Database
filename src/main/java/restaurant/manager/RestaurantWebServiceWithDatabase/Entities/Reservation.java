@@ -2,12 +2,14 @@ package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "reservation")
 public class Reservation {
@@ -24,4 +26,9 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Reservation(Food food, User user) {
+        this.food = food;
+        this.user = user;
+    }
 }

@@ -2,14 +2,18 @@ package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.FoodQuantity;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "food")
 public class Food {
@@ -35,6 +39,9 @@ public class Food {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
 
     public Food(String foodName, FoodQuantity foodQuantity, Double rating, Double price) {
         this.foodName = foodName;

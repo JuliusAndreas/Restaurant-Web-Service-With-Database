@@ -1,16 +1,14 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -29,12 +27,12 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<Restaurant> restaurants;
 
-    public User(){}
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
-
 
 }
