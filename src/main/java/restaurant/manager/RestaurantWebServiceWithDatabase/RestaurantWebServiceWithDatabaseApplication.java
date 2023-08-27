@@ -19,7 +19,7 @@ public class RestaurantWebServiceWithDatabaseApplication {
     @Bean
     public CommandLineRunner commandLineRunner(UserDAO userDAO) {
         return runner -> {
-            userDAO.save(new User("Shervin", "shervin123"));
+
         };
     }
 
