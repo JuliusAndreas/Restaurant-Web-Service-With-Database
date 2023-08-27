@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.RestaurantDAO;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserDAO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.FoodQuantity;
 
 @SpringBootApplication
@@ -17,7 +18,7 @@ public class RestaurantWebServiceWithDatabaseApplication {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(RestaurantDAO restaurantDAO) {
+    public CommandLineRunner commandLineRunner(RestaurantDAO restaurantDAO, UserDAO userDAO) {
         return runner -> {
             Restaurant tempRestaurant =
                     new Restaurant("The Cherry Blossoms");
@@ -27,6 +28,8 @@ public class RestaurantWebServiceWithDatabaseApplication {
 
             tempRestaurant.add(food1);
             tempRestaurant.add(food2);
+
+            tempRestaurant.setOwner(userDAO.findById(2));
 
             restaurantDAO.save(tempRestaurant);
         };

@@ -28,7 +28,7 @@ public class Restaurant {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private User user;
+    private User owner;
 
     public Restaurant(String restaurantName) {
         this.restaurantName = restaurantName;

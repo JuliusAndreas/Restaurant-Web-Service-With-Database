@@ -26,7 +26,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "owner")
     private List<Restaurant> restaurants;
 
     public User(){}
