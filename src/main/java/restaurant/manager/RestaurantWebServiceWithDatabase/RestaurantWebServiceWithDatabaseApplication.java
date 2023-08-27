@@ -43,9 +43,7 @@ public class RestaurantWebServiceWithDatabaseApplication {
 //            User tempUser = userDAO.findById(2);
 //            Reservation reservation = new Reservation(tempFood, tempUser);
 //            reservationDAO.save(reservation);
-            Restaurant restaurant = restaurantDAO.findById(5);
-            List<Food> resultFoods = foodDAO.findByRestaurantId(5);
-            restaurant.setFoods(resultFoods);
+            Restaurant restaurant = restaurantDAO.findByIdJoinFetch(5);
             System.out.println("foods: " + restaurant.getFoods());
 
 

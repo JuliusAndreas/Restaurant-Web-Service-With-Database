@@ -8,6 +8,7 @@ import java.util.List;
 public interface RestaurantDAO {
     void save(Restaurant restaurant);
     Restaurant findById(Integer id);
+    Restaurant findByIdJoinFetch(Integer id);
     List<Restaurant> findAll();
     List<Restaurant> findByName(String name);
     void update(Restaurant restaurant);
