@@ -21,12 +21,15 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @ToString.Exclude
     @Column(name = "password")
     private String password;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "owner")
     private List<Restaurant> restaurants;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 

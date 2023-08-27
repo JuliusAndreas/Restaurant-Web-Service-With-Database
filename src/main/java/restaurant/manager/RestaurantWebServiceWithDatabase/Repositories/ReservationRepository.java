@@ -41,7 +41,7 @@ public class ReservationRepository implements ReservationDAO{
     @Override
     public List<Reservation> findByUserId(Integer userID) {
         TypedQuery<Reservation> theQuery = entityManager.createQuery(
-                "FROM Reservation WHERE user.getId()=:queryId", Reservation.class);
+                "FROM Reservation WHERE user.id=:queryId", Reservation.class);
         theQuery.setParameter("queryId", userID);
         return theQuery.getResultList();
     }
@@ -49,7 +49,7 @@ public class ReservationRepository implements ReservationDAO{
     @Override
     public List<Reservation> findByFoodId(Integer foodID) {
         TypedQuery<Reservation> theQuery = entityManager.createQuery(
-                "FROM Reservation WHERE food.getId()=:queryId", Reservation.class);
+                "FROM Reservation WHERE food.id=:queryId", Reservation.class);
         theQuery.setParameter("queryId", foodID);
         return theQuery.getResultList();
     }

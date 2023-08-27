@@ -5,12 +5,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Reservation;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.FoodDAO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.ReservationDAO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.RestaurantDAO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserDAO;
+
+import java.util.List;
 
 @SpringBootApplication
 public class RestaurantWebServiceWithDatabaseApplication {
@@ -38,10 +39,16 @@ public class RestaurantWebServiceWithDatabaseApplication {
 //
 //            restaurantDAO.save(tempRestaurant);
 
-            Food tempFood = foodDAO.findById(3);
-            User tempUser = userDAO.findById(2);
-            Reservation reservation = new Reservation(tempFood, tempUser);
-            reservationDAO.save(reservation);
+//            Food tempFood = foodDAO.findById(3);
+//            User tempUser = userDAO.findById(2);
+//            Reservation reservation = new Reservation(tempFood, tempUser);
+//            reservationDAO.save(reservation);
+            Restaurant restaurant = restaurantDAO.findById(5);
+            List<Food> resultFoods = foodDAO.findByRestaurantId(5);
+            restaurant.setFoods(resultFoods);
+            System.out.println("foods: " + restaurant.getFoods());
+
+
         };
     }
 

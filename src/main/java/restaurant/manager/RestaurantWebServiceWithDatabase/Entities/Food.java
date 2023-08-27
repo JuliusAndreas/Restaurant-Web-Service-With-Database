@@ -40,6 +40,7 @@ public class Food {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 

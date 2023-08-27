@@ -6,10 +6,18 @@ import java.util.List;
 
 public interface FoodDAO {
     void save(Food food);
+
     Food findById(Integer id);
+
     List<Food> findAll();
+
+    List<Food> findByRestaurantId(Integer id);
+
     List<Food> findByName(String name);
+
     void update(Food food);
+
     void delete(Integer id);
+
     Integer deleteAll();
 }

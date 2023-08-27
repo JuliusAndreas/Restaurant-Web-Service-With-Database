@@ -6,12 +6,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 
 import java.util.List;
 
 @Repository
-public class FoodRepository implements FoodDAO{
+public class FoodRepository implements FoodDAO {
 
     private EntityManager entityManager;
 
@@ -19,6 +18,7 @@ public class FoodRepository implements FoodDAO{
     public FoodRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+
     @Override
     @Transactional
     public void save(Food food) {
@@ -35,6 +35,14 @@ public class FoodRepository implements FoodDAO{
         TypedQuery<Food> theQuery = entityManager.createQuery(
                 "FROM Food order by foodName asc", Food.class);
         return theQuery.getResultList();
+    }
+
+    @Override
+    public List<Food> findByRestaurantId(Integer id) {
+        TypedQuery<Food> query = entityManager.createQuery("from Food where restaurant.id = :queryId"
+                , Food.class);
+        query.setParameter("queryId", id);
+        return query.getResultList();
     }
 
     @Override

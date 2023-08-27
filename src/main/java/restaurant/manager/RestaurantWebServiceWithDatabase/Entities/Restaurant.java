@@ -25,6 +25,7 @@ public class Restaurant {
     @Column(name = "restaurantName")
     private String restaurantName;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Food> foods;
 
