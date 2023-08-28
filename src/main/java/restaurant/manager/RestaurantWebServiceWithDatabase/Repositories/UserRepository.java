@@ -1,67 +1,20 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Repositories;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions.UserDAO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 
 import java.util.List;
 
-@Repository
-public class UserRepository implements UserDAO {
+public interface UserRepository extends JpaRepository<User, Integer>, UserDAO {
+    @Query("SELECT u FROM User u WHERE u.id = :queryId")
+    User findByUserId(@Param("queryId") Integer id);
 
-    private EntityManager entityManager;
+    @Query("SELECT u FROM User u")
+    List<User> findAll();
 
-    @Autowired
-    public UserRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    @Override
-    @Transactional
-    public void save(User user) {
-        entityManager.persist(user);
-    }
-
-    @Override
-    public User findById(Integer id) {
-        return entityManager.find(User.class, id);
-    }
-
-    @Override
-    public List<User> findAll() {
-        TypedQuery<User> theQuery = entityManager.createQuery("FROM User order by username asc", User.class);
-        return theQuery.getResultList();
-    }
-
-    @Override
-    public List<User> findByUsername(String username) {
-        TypedQuery<User> theQuery = entityManager.createQuery("FROM User WHERE username=:queryUsername"
-                , User.class);
-        theQuery.setParameter("queryUsername", username);
-        return theQuery.getResultList();
-    }
-
-    @Override
-    @Transactional
-    public void update(User user) {
-        entityManager.merge(user);
-    }
-
-    @Override
-    @Transactional
-    public void delete(Integer id) {
-        User user = entityManager.find(User.class, id);
-        entityManager.remove(user);
-    }
-
-    @Override
-    public Integer deleteAll() {
-        int rowsDeleted = entityManager.createQuery("DELETE FROM User").executeUpdate();
-        return rowsDeleted;
-    }
-
-
+    @Query("SELECT u FROM User u WHERE u.username = :queryUsername")
+    List<User> findByUsername(@Param("queryUsername") String username);
 }

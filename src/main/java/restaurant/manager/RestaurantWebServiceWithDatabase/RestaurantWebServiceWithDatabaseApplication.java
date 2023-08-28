@@ -4,14 +4,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.FoodDAO;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.ReservationDAO;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.RestaurantDAO;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserDAO;
-
-import java.util.List;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
+import restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions.FoodDAO;
+import restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions.ReservationDAO;
+import restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions.RestaurantDAO;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepository;
 
 @SpringBootApplication
 public class RestaurantWebServiceWithDatabaseApplication {
@@ -22,7 +19,7 @@ public class RestaurantWebServiceWithDatabaseApplication {
 
     @Bean
     public CommandLineRunner commandLineRunner(RestaurantDAO restaurantDAO
-            , UserDAO userDAO
+            , UserRepository userRepository
             , ReservationDAO reservationDAO
             , FoodDAO foodDAO) {
         return runner -> {
@@ -43,10 +40,10 @@ public class RestaurantWebServiceWithDatabaseApplication {
 //            User tempUser = userDAO.findById(2);
 //            Reservation reservation = new Reservation(tempFood, tempUser);
 //            reservationDAO.save(reservation);
-            Restaurant restaurant = restaurantDAO.findByIdJoinFetch(5);
-            System.out.println("foods: " + restaurant.getFoods());
-
-
+//            Restaurant restaurant = restaurantDAO.findById(5);
+//            restaurantDAO.delete(5);
+            User newUser = new User("Mali", "ali123");
+            userRepository.deleteById(7);
         };
     }
 
