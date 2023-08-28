@@ -42,4 +42,10 @@ public class Restaurant {
         this.foods.add(food);
         food.setRestaurant(this);
     }
+
+    public void remove(Food food) {
+        if (this.foods == null) return;
+        food.setRestaurant(null);
+        this.foods.remove(food);
+    }
 }

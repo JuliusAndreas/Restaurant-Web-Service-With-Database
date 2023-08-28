@@ -6,5 +6,5 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 import java.util.List;
 
 public interface RestaurantDAO {
-    void update(Restaurant restaurant);
+    void update(Integer id, Restaurant restaurant);
 }

@@ -3,5 +3,5 @@ package restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
 
 public interface FoodDAO {
-    void update(Food food);
+    void update(Integer id, Food food);
 }
