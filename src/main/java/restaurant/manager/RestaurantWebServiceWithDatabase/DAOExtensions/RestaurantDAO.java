@@ -1,5 +1,6 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions;
 
+import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 

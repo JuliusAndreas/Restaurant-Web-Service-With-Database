@@ -19,5 +19,6 @@ public interface FoodRepository extends JpaRepository<Food, Integer>, FoodDAO {
     @Query("SELECT f FROM Food f WHERE f.restaurant = :queryRestaurant")
     List<Food> findByRestaurant(@Param("queryRestaurant") Restaurant restaurant);
 
-
+    @Query("SELECT f FROM Restaurant r JOIN r.foods f WHERE r.restaurantName = :queryName")
+    List<Food> findByRestaurantName(@Param("queryName") String name);
 }

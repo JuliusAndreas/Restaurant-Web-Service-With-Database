@@ -58,7 +58,7 @@ public class RestaurantWebServiceWithDatabaseApplication {
 //            System.out.println(reservationRepository.findByUser(tempUser));
 
 //            Restaurant restaurant = restaurantRepository.findByRestaurantId(8);
-//            System.out.println(restaurant);
+//            System.out.println(foodRepository.findByRestaurantName("asghar mashti"));
 //
 //            System.out.println(userRepository.findUsersByFood(2));
 //            Food food = new Food("Gheymeh", FoodQuantity.HIGH, 10.0, 20.0);
@@ -66,8 +66,6 @@ public class RestaurantWebServiceWithDatabaseApplication {
 //            restaurant.setOwner(userRepository.findByUserId(5));
 //            food.setRestaurant(restaurant);
 //            foodRepository.update(9, food);
-
-            foodRepository.d
 
 //            Food tempFood = foodDAO.findById(3);
 //            User tempUser = userDAO.findById(2);

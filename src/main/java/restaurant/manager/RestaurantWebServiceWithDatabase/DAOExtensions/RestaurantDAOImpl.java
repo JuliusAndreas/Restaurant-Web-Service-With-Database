@@ -16,7 +16,6 @@ public class RestaurantDAOImpl implements RestaurantDAO {
         this.entityManager = entityManager;
     }
 
-
     @Override
     public void update(Integer id, Restaurant restaurant) {
         Restaurant restaurantToBeUpdated = entityManager.find(Restaurant.class, id);
