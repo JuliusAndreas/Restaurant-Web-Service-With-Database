@@ -8,7 +8,6 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.Reservat
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.RestaurantRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
