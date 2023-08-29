@@ -8,6 +8,34 @@ import lombok.Setter;
 import lombok.ToString;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
+@NamedEntityGraph(
+        name = "reservation-graph",
+        attributeNodes = {
+                @NamedAttributeNode("id"),
+                @NamedAttributeNode(value = "food", subgraph = "food-subgraph"),
+                @NamedAttributeNode(value = "user", subgraph = "user-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "food-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("id"),
+                                @NamedAttributeNode("foodName"),
+                                @NamedAttributeNode("foodQuantity"),
+                                @NamedAttributeNode("rating"),
+                                @NamedAttributeNode("price"),
+                        }
+                ),
+                @NamedSubgraph(
+                        name = "user-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("id"),
+                                @NamedAttributeNode("username"),
+                                @NamedAttributeNode("password")
+                        }
+                )
+        }
+)
 @Getter
 @Setter
 @ToString
@@ -23,12 +51,12 @@ public class Reservation {
     private Integer id;
 
     @JsonView(value = Views.Public.class)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
     private Food food;
 
     @JsonView(value = Views.Public.class)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

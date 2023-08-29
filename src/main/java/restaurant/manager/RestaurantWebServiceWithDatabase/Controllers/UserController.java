@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.UserService;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;
@@ -20,38 +22,40 @@ public class UserController {
 
     @GetMapping("/")
     @JsonView(Views.Public.class)
-    public ResponseEntity<?> getAllUsers() {
-        return new ResponseEntity<List<User>>(
-                userService.fetchAllUsers(), HttpStatus.OK);
+    public List<User> getAllUsers() {
+        List<User> responseList = userService.fetchAllUsers();
+        if (responseList.isEmpty()) {
+            throw new NotFoundException("No User was found");
+        }
+        return responseList;
     }
 
     @GetMapping("/{id}")
     @JsonView(Views.Public.class)
-    public ResponseEntity<?> getUserByID(@PathVariable Integer id) {
-        User user = userService.fetchOneUser(id);
-        if (user != null) {
-            return new ResponseEntity<User>(
-                    user, HttpStatus.OK);
+    public User getUserByID(@PathVariable Integer id) {
+        User fetchedUser = userService.fetchOneUser(id);
+        if (fetchedUser == null){
+            throw new NotFoundException("No User was found");
         }
-        return new ResponseEntity<String>("Such user does not exist", HttpStatus.BAD_REQUEST);
+        return fetchedUser;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addUser(@RequestBody User user) {
+    @PostMapping("/")
+    public ResponseEntity addUser(@RequestBody User user) {
         userService.addOneUser(user);
-        return new ResponseEntity<>("Successfully added the user", HttpStatus.OK);
+        return new ResponseEntity<>(new OkResponse("User successfully added"), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody User user) {
+    @PutMapping("/{id}")
+    public ResponseEntity updateUser(@PathVariable Integer id, @RequestBody User user) {
         userService.updateOneUser(id, user);
-        return new ResponseEntity<>("Successfully added the user", HttpStatus.OK);
+        return new ResponseEntity<>(new OkResponse("User successfully updated"), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable Integer id) {
         userService.removeOneUser(id);
-        return new ResponseEntity<>("Successfully added the user", HttpStatus.OK);
+        return new ResponseEntity<>(new OkResponse("User successfully removed"), HttpStatus.OK);
     }
 }
 

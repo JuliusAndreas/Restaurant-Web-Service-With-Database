@@ -1,12 +1,17 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.RestaurantService;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.ErrorResponse;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;
 
@@ -17,40 +22,43 @@ public class RestaurantController {
     @Autowired
     private RestaurantService restaurantService;
 
+    @JsonView(Views.Public.class)
     @GetMapping("/")
-    public ResponseEntity<List<Restaurant>> getRestaurants() {
-        return new ResponseEntity<List<Restaurant>>(
-                restaurantService.fetchAllRestaurants(), HttpStatus.OK
-        );
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity getOneRestaurant(@PathVariable int id) {
-        Restaurant fetchedRestaurant = restaurantService.fetchOneRestaurant(id);
-        if (fetchedRestaurant != null) {
-            return new ResponseEntity<Restaurant>(
-                    fetchedRestaurant, HttpStatus.OK);
+    public List<Restaurant> getRestaurants() {
+        List<Restaurant> responseList = restaurantService.fetchAllRestaurants();
+        if (responseList.isEmpty()) {
+            throw new NotFoundException("No Restaurant was found");
         }
-        return new ResponseEntity<String>("Such restaurant does not exist", HttpStatus.BAD_REQUEST);
+        return responseList;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<String> addOneRestaurant(@RequestBody Restaurant restaurant) {
+    @JsonView(Views.Public.class)
+    @GetMapping("/{id}")
+    public Restaurant getOneRestaurant(@PathVariable int id) {
+        Restaurant fetchedRestaurant = restaurantService.fetchOneRestaurant(id);
+        if (fetchedRestaurant == null){
+            throw new NotFoundException("No Restaurant was found");
+        }
+        return fetchedRestaurant;
+    }
+
+    @PostMapping("/")
+    public ResponseEntity addOneRestaurant(@RequestBody Restaurant restaurant) {
         restaurantService.addOneRestaurant(restaurant);
-        return new ResponseEntity<>("Successfully added the restaurant", HttpStatus.OK);
+        return new ResponseEntity<>(new OkResponse("Restaurant successfully added"), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<String> updateOneRestaurant(@PathVariable int id
+    @PutMapping("/{id}")
+    public ResponseEntity updateOneRestaurant(@PathVariable int id
             , @RequestBody Restaurant restaurant) {
         restaurantService.updateOneRestaurant(id, restaurant);
-        return new ResponseEntity<>("Successfully added the restaurant", HttpStatus.OK);
+        return new ResponseEntity<>(new OkResponse("Restaurant successfully updated"), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> deleteOneRestaurant(@NonNull @PathVariable int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteOneRestaurant(@NonNull @PathVariable int id) {
         restaurantService.removeOneRestaurant(id);
-        return new ResponseEntity<>("Successfully added the restaurant", HttpStatus.OK);
+        return new ResponseEntity<>(new OkResponse("Restaurant succesfully deleted"), HttpStatus.OK);
     }
 }
 

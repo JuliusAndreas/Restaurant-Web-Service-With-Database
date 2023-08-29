@@ -11,6 +11,16 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;
 
+@NamedEntityGraph(
+        name = "food-graph",
+        attributeNodes = {
+                @NamedAttributeNode("id"),
+                @NamedAttributeNode("foodName"),
+                @NamedAttributeNode("foodQuantity"),
+                @NamedAttributeNode("rating"),
+                @NamedAttributeNode("price"),
+        }
+)
 @Getter
 @Setter
 @ToString

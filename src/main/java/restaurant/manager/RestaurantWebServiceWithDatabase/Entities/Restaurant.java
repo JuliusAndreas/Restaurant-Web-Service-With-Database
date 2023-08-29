@@ -11,6 +11,35 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedEntityGraph(
+        name = "restaurant-graph",
+        attributeNodes = {
+                @NamedAttributeNode("id"),
+                @NamedAttributeNode("restaurantName"),
+                @NamedAttributeNode(value = "foods", subgraph = "foods-subgraph"),
+                @NamedAttributeNode(value = "owner", subgraph = "owner-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "foods-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("id"),
+                                @NamedAttributeNode("foodName"),
+                                @NamedAttributeNode("foodQuantity"),
+                                @NamedAttributeNode("rating"),
+                                @NamedAttributeNode("price"),
+                        }
+                ),
+                @NamedSubgraph(
+                        name = "owner-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("id"),
+                                @NamedAttributeNode("username"),
+                                @NamedAttributeNode("password")
+                        }
+                )
+        }
+)
 @Getter
 @Setter
 @ToString
@@ -35,7 +64,7 @@ public class Restaurant {
     private List<Food> foods;
 
     @JsonView(value = Views.Public.class)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
 

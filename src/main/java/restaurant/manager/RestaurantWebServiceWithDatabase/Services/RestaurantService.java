@@ -15,11 +15,11 @@ public class RestaurantService {
     private RestaurantRepository restaurantRepository;
 
     public List<Restaurant> fetchAllRestaurants() {
-        return restaurantRepository.findAll();
+        return restaurantRepository.findAllRestaurantsJoinFetchFoodsOwner();
     }
 
     public Restaurant fetchOneRestaurant(@NonNull Integer id) {
-        return restaurantRepository.findByRestaurantId(id);
+        return restaurantRepository.findByRestaurantIdJoinFetchFoodsOwner(id);
     }
 
     public void addOneRestaurant(@NonNull Restaurant restaurant) {

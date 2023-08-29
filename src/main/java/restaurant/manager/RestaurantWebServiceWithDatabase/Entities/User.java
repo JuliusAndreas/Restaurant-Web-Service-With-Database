@@ -10,6 +10,14 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;
 
+@NamedEntityGraph(
+        name = "user-graph",
+        attributeNodes = {
+                @NamedAttributeNode("id"),
+                @NamedAttributeNode("username"),
+                @NamedAttributeNode("password")
+        }
+)
 @Getter
 @Setter
 @ToString

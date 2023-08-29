@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Reservation;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.ReservationService;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
 
 import java.util.List;
 
@@ -17,49 +19,50 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Reservation>> getAllReservations() {
-        List<Reservation> reservations = reservationService.fetchAllReservations();
-        return new ResponseEntity<>(
-                reservationService.fetchAllReservations(), HttpStatus.OK
-        );
+    public List<Reservation> getAllReservations() {
+        List<Reservation> fetchedReservations = reservationService.fetchAllReservations();
+        if (fetchedReservations.isEmpty()) {
+            throw new NotFoundException("No Reservation was found");
+        }
+        return fetchedReservations;
     }
 
     @GetMapping("/restaurant/{id}")
-    public ResponseEntity getAllReservationsPerRestaurant(@PathVariable int id) {
+    public List<Reservation> getAllReservationsPerRestaurant(@PathVariable int id) {
         List<Reservation> fetchedReservations = reservationService.fetchAllReservationsOfOneRestaurant(id);
-        if (fetchedReservations != null) {
-            return new ResponseEntity<List<Reservation>>(fetchedReservations, HttpStatus.OK);
+        if (fetchedReservations.isEmpty()) {
+            throw new NotFoundException("No Reservation was found");
         }
-        return new ResponseEntity<String>("Such restaurant does not exist", HttpStatus.BAD_REQUEST);
+        return fetchedReservations;
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity getAllReservationsPerUser(@PathVariable int id) {
+    public List<Reservation> getAllReservationsPerUser(@PathVariable int id) {
         List<Reservation> userFetchedReservations = reservationService
                 .fetchAllReservationsOfOneUser(id);
-        if (userFetchedReservations != null) {
-            return new ResponseEntity<List<Reservation>>(userFetchedReservations, HttpStatus.OK);
+        if (userFetchedReservations.isEmpty()) {
+            throw new NotFoundException("No Reservation was found");
         }
-        return new ResponseEntity<String>("invalid user", HttpStatus.BAD_REQUEST);
+        return userFetchedReservations;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<String> addReservation(@RequestBody Reservation reservation) {
+    @PostMapping("/")
+    public ResponseEntity addReservation(@RequestBody Reservation reservation) {
         reservationService.addReservation(reservation);
-        return new ResponseEntity<>("Successfully added the reservation", HttpStatus.OK);
+        return new ResponseEntity<>(new OkResponse("Reservation successfully added"), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<String> updateReservation(@PathVariable int id,
+    @PutMapping("/{id}")
+    public ResponseEntity updateReservation(@PathVariable int id,
                                                     @RequestBody Reservation reservation) {
         reservationService.updateReservation(id, reservation);
-        return new ResponseEntity<>("Successfully updated the reservation", HttpStatus.OK);
+        return new ResponseEntity<>(new OkResponse("Restaurant successfully updated"), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> deleteReservation(@PathVariable int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteReservation(@PathVariable int id) {
         reservationService.removeOneReservation(id);
-        return new ResponseEntity<>("Successfully added the reservation", HttpStatus.OK);
+        return new ResponseEntity<>(new OkResponse("Reservation successfully added"), HttpStatus.OK);
     }
 }
 

@@ -14,8 +14,6 @@ public class FoodDAOImpl implements FoodDAO {
     public FoodDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-
-
     @Override
     @Transactional
     public void update(Integer id, Food food) {
