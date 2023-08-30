@@ -22,8 +22,10 @@ public class UserController {
 
     @GetMapping("/")
     @JsonView(Views.Public.class)
-    public List<User> getAllUsers() {
-        List<User> responseList = userService.fetchAllUsers();
+    public List<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "5") int itemsPerPage,
+                                  @RequestParam(defaultValue = "username") String sortedBy) {
+        List<User> responseList = userService.fetchAllUsers(page, itemsPerPage, sortedBy);
         if (responseList.isEmpty()) {
             throw new NotFoundException("No User was found");
         }

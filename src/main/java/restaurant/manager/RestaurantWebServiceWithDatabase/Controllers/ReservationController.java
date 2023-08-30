@@ -22,8 +22,10 @@ public class ReservationController {
 
     @JsonView(value = Views.Public.class)
     @GetMapping("/")
-    public List<Reservation> getAllReservations() {
-        List<Reservation> fetchedReservations = reservationService.fetchAllReservations();
+    public List<Reservation> getAllReservations(@RequestParam(defaultValue = "0") Integer page,
+                                                @RequestParam(defaultValue = "5") Integer itemsPerPage) {
+        List<Reservation> fetchedReservations = reservationService.fetchAllReservations(
+                page, itemsPerPage);
         if (fetchedReservations.isEmpty()) {
             throw new NotFoundException("No Reservation was found");
         }
@@ -32,8 +34,11 @@ public class ReservationController {
 
     @JsonView(value = Views.Public.class)
     @GetMapping("/restaurant/{id}")
-    public List<Reservation> getAllReservationsPerRestaurant(@PathVariable int id) {
-        List<Reservation> fetchedReservations = reservationService.fetchAllReservationsOfOneRestaurant(id);
+    public List<Reservation> getAllReservationsPerRestaurant(@RequestParam(defaultValue = "0") Integer page,
+                                                             @RequestParam(defaultValue = "5") Integer itemsPerPage,
+                                                             @PathVariable int id) {
+        List<Reservation> fetchedReservations = reservationService.fetchAllReservationsOfOneRestaurant(
+                page, itemsPerPage, id);
         if (fetchedReservations.isEmpty()) {
             throw new NotFoundException("No Reservation was found");
         }
@@ -42,9 +47,11 @@ public class ReservationController {
 
     @JsonView(value = Views.Public.class)
     @GetMapping("/user/{id}")
-    public List<Reservation> getAllReservationsPerUser(@PathVariable int id) {
+    public List<Reservation> getAllReservationsPerUser(@RequestParam(defaultValue = "0") Integer page,
+                                                       @RequestParam(defaultValue = "5") Integer itemsPerPage,
+                                                       @PathVariable int id) {
         List<Reservation> userFetchedReservations = reservationService
-                .fetchAllReservationsOfOneUser(id);
+                .fetchAllReservationsOfOneUser(page, itemsPerPage, id);
         if (userFetchedReservations.isEmpty()) {
             throw new NotFoundException("No Reservation was found");
         }

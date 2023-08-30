@@ -24,8 +24,10 @@ public class RestaurantController {
 
     @JsonView(Views.Public.class)
     @GetMapping("/")
-    public List<Restaurant> getRestaurants() {
-        List<Restaurant> responseList = restaurantService.fetchAllRestaurants();
+    public List<Restaurant> getRestaurants(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "5") int itemsPerPage,
+                                           @RequestParam(defaultValue = "restaurantName") String sortedBy) {
+        List<Restaurant> responseList = restaurantService.fetchAllRestaurants(page, itemsPerPage, sortedBy);
         if (responseList.isEmpty()) {
             throw new NotFoundException("No Restaurant was found");
         }

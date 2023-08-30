@@ -1,11 +1,10 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Repositories;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions.RestaurantDAO;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Reservation;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 
 import java.util.List;
@@ -17,6 +16,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @Query("SELECT r from Restaurant r LEFT JOIN FETCH r.foods JOIN FETCH r.owner")
     List<Restaurant> findAllRestaurantsJoinFetchFoodsOwner();
+
+    @Query("select r from Restaurant r")
+    List<Restaurant> findAllRestaurants(Pageable pageable);
 
     @Query("SELECT r from Restaurant r JOIN FETCH r.owner")
     List<Restaurant> findAllRestaurantsJoinFetchOwner();
@@ -31,9 +33,4 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("SELECT r from Restaurant r where r.id = :queryId")
     Restaurant findByRestaurantIdJoinFetchFoodsOwner(@Param("queryId") Integer id);
 
-    @Query("SELECT f FROM Restaurant r JOIN r.foods f WHERE r.id = :queryId")
-    List<Food> getFoodsByRestaurantId(@Param("queryId") Integer id);
-
-    @Query("SELECT res FROM Reservation res JOIN Food f JOIN Restaurant r WHERE r.id = :queryId")
-    List<Reservation> getReservationsByRestaurantId(@Param("queryId") Integer id);
 }

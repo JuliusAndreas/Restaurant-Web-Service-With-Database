@@ -55,7 +55,4 @@ public class User {
         this.password = password;
     }
 
-//    public Boolean matches(User that){
-//
-//    }
 }

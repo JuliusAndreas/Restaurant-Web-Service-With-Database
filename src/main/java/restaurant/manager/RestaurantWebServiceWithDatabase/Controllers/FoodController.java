@@ -22,8 +22,12 @@ public class FoodController {
 
     @JsonView(value = Views.Public.class)
     @GetMapping("/{restaurantId}")
-    public List<Food> getAllFoodsFromOneRestaurant(@PathVariable int restaurantId) {
-        List<Food> responseList = foodService.fetchAllFoodsFromOneRestaurantById(restaurantId);
+    public List<Food> getAllFoodsFromOneRestaurant(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "5") int itemsPerPage,
+                                                   @RequestParam(defaultValue = "foodName") String sortedBy,
+                                                   @PathVariable int restaurantId) {
+        List<Food> responseList = foodService.fetchAllFoodsFromOneRestaurantById(restaurantId,
+                page, itemsPerPage, sortedBy);
         if (responseList.isEmpty()) {
             throw new NotFoundException("No Food was found");
         }

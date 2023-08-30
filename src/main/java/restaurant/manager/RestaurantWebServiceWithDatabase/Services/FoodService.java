@@ -1,6 +1,9 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
@@ -22,8 +25,12 @@ public class FoodService {
         return foodRepository.findByRestaurantName(restaurantName);
     }
 
-    public List<Food> fetchAllFoodsFromOneRestaurantById(@NonNull Integer id) {
-        return restaurantRepository.getFoodsByRestaurantId(id);
+    public List<Food> fetchAllFoodsFromOneRestaurantById(@NonNull Integer id,
+                                                         Integer page,
+                                                         Integer itemsPerPage,
+                                                         String sortedBy) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage, Sort.by(sortedBy));
+        return foodRepository.getFoodsByRestaurantId(id, pageable);
     }
 
     public void addFoodToOneRestaurant(@NonNull Integer id, @NonNull Food food) {

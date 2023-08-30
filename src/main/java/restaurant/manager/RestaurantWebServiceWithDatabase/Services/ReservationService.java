@@ -1,6 +1,8 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
@@ -23,21 +25,29 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
     private UserRepository userRepository;
 
-    public List<Reservation> fetchAllReservations() {
-        return reservationRepository.findAll();
+    public List<Reservation> fetchAllReservations(Integer page, Integer itemsPerPage) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage);
+        return reservationRepository.findAllReservations(pageable);
     }
 
-    public List<Reservation> fetchAllReservationsOfOneRestaurant(@NonNull Integer id) {
-        return restaurantRepository.getReservationsByRestaurantId(id);
+    public List<Reservation> fetchAllReservationsOfOneRestaurant(Integer page, Integer itemsPerPage,
+                                                                 @NonNull Integer id) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage);
+        return reservationRepository.getReservationsByRestaurantId(id, pageable);
     }
 
-    public List<Reservation> fetchAllReservationsOfOneUser(@NonNull Integer id) {
-        return reservationRepository.findByUserId(id);
+    public List<Reservation> fetchAllReservationsOfOneUser(Integer page, Integer itemsPerPage,
+                                                           @NonNull Integer id) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage);
+        return reservationRepository.findByUserId(id, pageable);
     }
 
     public void addReservation(@NonNull Integer userId, @NonNull Integer foodId) {
         Food orderedFood = foodRepository.findByFoodId(foodId);
         User ordererUser = userRepository.findByUserId(userId);
+        if (orderedFood == null || ordererUser == null) {
+            throw new RuntimeException("Bad Parameters were sent");
+        }
         Reservation reservation = new Reservation(orderedFood, ordererUser);
         reservationRepository.save(reservation);
     }

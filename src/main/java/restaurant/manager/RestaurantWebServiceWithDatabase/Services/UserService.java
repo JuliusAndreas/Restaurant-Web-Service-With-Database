@@ -1,6 +1,9 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
@@ -15,8 +18,9 @@ public class UserService {
 
     private UserRepository userRepository;
 
-    public List<User> fetchAllUsers() {
-        return userRepository.findAll();
+    public List<User> fetchAllUsers(int page, int itemsPerPage, String sortedBy) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage, Sort.by(sortedBy));
+        return userRepository.findAllUsers(pageable);
     }
 
     public User fetchOneUser(@NonNull Integer id) {

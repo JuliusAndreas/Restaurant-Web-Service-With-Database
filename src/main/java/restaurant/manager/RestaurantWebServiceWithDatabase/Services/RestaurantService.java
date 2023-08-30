@@ -1,6 +1,9 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
@@ -18,16 +21,16 @@ public class RestaurantService {
     private RestaurantRepository restaurantRepository;
     private UserRepository userRepository;
 
-    public List<Restaurant> fetchAllRestaurants() {
-        return restaurantRepository.findAllRestaurantsJoinFetchFoodsOwner();
+    public List<Restaurant> fetchAllRestaurants(Integer page, Integer itemsPerPage, String sortedBy) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage, Sort.by(sortedBy));
+        return restaurantRepository.findAllRestaurants(pageable);
     }
 
     public Restaurant fetchOneRestaurant(@NonNull Integer id) {
         return restaurantRepository.findByRestaurantIdJoinFetchFoodsOwner(id);
     }
 
-    public void addOneRestaurant(@NonNull Restaurant restaurant,
-                                 @NonNull Integer ownerId) {
+    public void addOneRestaurant(@NonNull Restaurant restaurant, @NonNull Integer ownerId) {
         User owner = userRepository.findByUserId(ownerId);
         restaurant.setOwner(owner);
         restaurantRepository.save(restaurant);
