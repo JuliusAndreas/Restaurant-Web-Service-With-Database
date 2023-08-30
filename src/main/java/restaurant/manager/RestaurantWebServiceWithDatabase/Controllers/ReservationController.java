@@ -9,6 +9,7 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Reservation;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.ReservationService;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OrderStatus;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;
@@ -24,8 +25,7 @@ public class ReservationController {
     @GetMapping("/")
     public List<Reservation> getAllReservations(@RequestParam(defaultValue = "0") Integer page,
                                                 @RequestParam(defaultValue = "5") Integer itemsPerPage) {
-        List<Reservation> fetchedReservations = reservationService.fetchAllReservations(
-                page, itemsPerPage);
+        List<Reservation> fetchedReservations = reservationService.fetchAllReservations(page, itemsPerPage);
         if (fetchedReservations.isEmpty()) {
             throw new NotFoundException("No Reservation was found");
         }
@@ -37,8 +37,7 @@ public class ReservationController {
     public List<Reservation> getAllReservationsPerRestaurant(@RequestParam(defaultValue = "0") Integer page,
                                                              @RequestParam(defaultValue = "5") Integer itemsPerPage,
                                                              @PathVariable int id) {
-        List<Reservation> fetchedReservations = reservationService.fetchAllReservationsOfOneRestaurant(
-                page, itemsPerPage, id);
+        List<Reservation> fetchedReservations = reservationService.fetchAllReservationsOfOneRestaurant(page, itemsPerPage, id);
         if (fetchedReservations.isEmpty()) {
             throw new NotFoundException("No Reservation was found");
         }
@@ -56,6 +55,16 @@ public class ReservationController {
             throw new NotFoundException("No Reservation was found");
         }
         return userFetchedReservations;
+    }
+
+    @JsonView(value = Views.Public.class)
+    @GetMapping("/{id}")
+    public Reservation getOneReservation(@PathVariable int id){
+        Reservation fetchedReservation = reservationService.fetchOneReservation(id);
+        if (fetchedReservation == null) {
+            throw new NotFoundException("No Reservation was found");
+        }
+        return fetchedReservation;
     }
 
     @PostMapping("/")
@@ -77,6 +86,12 @@ public class ReservationController {
     public ResponseEntity deleteReservation(@PathVariable int id) {
         reservationService.removeOneReservation(id);
         return new ResponseEntity<>(new OkResponse("Reservation successfully added"), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity completeOrder(@PathVariable int id){
+        reservationService.setStatusToCompleted(id);
+        return new ResponseEntity<>(new OkResponse("Reservation successfully completed"), HttpStatus.OK);
     }
 }
 

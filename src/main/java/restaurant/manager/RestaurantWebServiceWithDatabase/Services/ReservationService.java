@@ -11,8 +11,8 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.FoodRepository;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.ReservationRepository;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.RestaurantRepository;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepository;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OrderStatus;
 
 import java.util.List;
 
@@ -21,13 +21,16 @@ import java.util.List;
 public class ReservationService {
 
     private FoodRepository foodRepository;
-    private RestaurantRepository restaurantRepository;
     private ReservationRepository reservationRepository;
     private UserRepository userRepository;
 
     public List<Reservation> fetchAllReservations(Integer page, Integer itemsPerPage) {
         Pageable pageable = PageRequest.of(page, itemsPerPage);
         return reservationRepository.findAllReservations(pageable);
+    }
+
+    public Reservation fetchOneReservation(Integer id) {
+        return reservationRepository.findByReservationId(id);
     }
 
     public List<Reservation> fetchAllReservationsOfOneRestaurant(Integer page, Integer itemsPerPage,
@@ -48,7 +51,7 @@ public class ReservationService {
         if (orderedFood == null || ordererUser == null) {
             throw new RuntimeException("Bad Parameters were sent");
         }
-        Reservation reservation = new Reservation(orderedFood, ordererUser);
+        Reservation reservation = new Reservation(orderedFood, ordererUser, OrderStatus.ONGOING);
         reservationRepository.save(reservation);
     }
 
@@ -56,7 +59,10 @@ public class ReservationService {
                                   @NonNull Integer foodId) {
         Food orderedFood = foodRepository.findByFoodId(foodId);
         User ordererUser = userRepository.findByUserId(userId);
-        Reservation reservation = new Reservation(orderedFood, ordererUser);
+        if (orderedFood == null || ordererUser == null) {
+            throw new RuntimeException("Bad Parameters were sent");
+        }
+        Reservation reservation = new Reservation(orderedFood, ordererUser, OrderStatus.ONGOING);
         reservationRepository.update(id, reservation);
     }
 
@@ -65,5 +71,17 @@ public class ReservationService {
             throw new NotFoundException("No Reservation was found to be deleted");
         }
         reservationRepository.deleteById(id);
+    }
+
+    public void setStatusToCompleted(@NonNull Integer id){
+        if (!reservationRepository.existsById(id)) {
+            throw new NotFoundException("No Reservation was found to be completed");
+        }
+        Reservation reservation = reservationRepository.findByReservationId(id);
+        if (reservation.getStatus() == OrderStatus.DONE){
+            throw new RuntimeException("This reservation is already completed");
+        }
+        reservation.setStatus(OrderStatus.DONE);
+        reservationRepository.save(reservation);
     }
 }

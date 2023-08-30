@@ -3,6 +3,7 @@ package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.*;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OrderStatus;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 @NamedEntityGraph(
@@ -57,8 +58,14 @@ public class Reservation {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Reservation(Food food, User user) {
+    @JsonView(value = Views.Public.class)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private OrderStatus status;
+
+    public Reservation(Food food, User user, OrderStatus status) {
         this.food = food;
         this.user = user;
+        this.status = status;
     }
 }
