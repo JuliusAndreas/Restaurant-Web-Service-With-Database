@@ -39,7 +39,13 @@ public class FoodService {
         foodRepository.save(food);
     }
 
-    public void updateOneFoodFromOneRestaurant(@NonNull Integer foodId, @NonNull Food food) {
+    public void updateOneFoodFromOneRestaurant(@NonNull Integer restaurantId,
+                                               @NonNull Integer foodId, @NonNull Food food) {
+        Restaurant restaurant = restaurantRepository.findByRestaurantId(restaurantId);
+        Food foodToBeUpdated = foodRepository.findByFoodId(foodId);
+        if (!restaurant.getFoods().contains(foodToBeUpdated)) {
+            throw new RuntimeException("This food can not be updated because the specified restaurant does not serve it");
+        }
         foodRepository.update(foodId, food);
     }
 

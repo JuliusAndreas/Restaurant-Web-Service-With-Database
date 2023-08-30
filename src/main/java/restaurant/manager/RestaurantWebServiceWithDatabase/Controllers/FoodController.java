@@ -41,10 +41,10 @@ public class FoodController {
         return new ResponseEntity<>(new OkResponse("Food successfully added"), HttpStatus.OK);
     }
 
-    @PutMapping("/{foodId}")
-    public ResponseEntity updateFoodFromOneRestaurant(@PathVariable int foodId
+    @PutMapping("/{restaurantId}/{foodId}")
+    public ResponseEntity updateFoodFromOneRestaurant(@PathVariable int restaurantId, @PathVariable int foodId
             , @RequestBody Food food) {
-        foodService.updateOneFoodFromOneRestaurant(foodId, food);
+        foodService.updateOneFoodFromOneRestaurant(restaurantId, foodId, food);
         return new ResponseEntity<>(new OkResponse("Food successfully updated"), HttpStatus.OK);
     }
 

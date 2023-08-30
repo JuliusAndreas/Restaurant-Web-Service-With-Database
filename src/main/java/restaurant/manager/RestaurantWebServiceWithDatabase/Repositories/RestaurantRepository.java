@@ -24,7 +24,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     List<Restaurant> findAllRestaurantsJoinFetchOwner();
 
 
-    @Query("SELECT r from Restaurant r JOIN FETCH r.foods")
+    @Query("SELECT r from Restaurant r LEFT JOIN FETCH r.foods")
     List<Restaurant> findAllRestaurantsJoinFetchFoods();
 
     @Query("SELECT r from Restaurant r JOIN FETCH r.foods where r.id = :queryId")
