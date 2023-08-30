@@ -1,11 +1,9 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;
@@ -21,6 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
@@ -41,12 +40,12 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @JsonView(value = Views.Private.class)
+    @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "owner")
     private List<Restaurant> restaurants;
 
-    @JsonView(value = Views.Private.class)
+    @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
@@ -56,4 +55,7 @@ public class User {
         this.password = password;
     }
 
+//    public Boolean matches(User that){
+//
+//    }
 }

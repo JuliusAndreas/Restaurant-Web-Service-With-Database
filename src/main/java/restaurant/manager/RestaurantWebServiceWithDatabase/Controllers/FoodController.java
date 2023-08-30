@@ -1,5 +1,6 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,17 +9,19 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.FoodService;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/foods")
+@RequestMapping("/restaurants/foods")
 public class FoodController {
 
     @Autowired
     private FoodService foodService;
 
-    @GetMapping("/")
+    @JsonView(value = Views.Public.class)
+    @GetMapping("/{restaurantId}")
     public List<Food> getAllFoodsFromOneRestaurant(@PathVariable int restaurantId) {
         List<Food> responseList = foodService.fetchAllFoodsFromOneRestaurantById(restaurantId);
         if (responseList.isEmpty()) {
@@ -27,7 +30,7 @@ public class FoodController {
         return responseList;
     }
 
-    @PostMapping("/")
+    @PostMapping("/{restaurantId}")
     public ResponseEntity addFoodToOneRestaurant(@PathVariable int restaurantId
             , @RequestBody Food food) {
         foodService.addFoodToOneRestaurant(restaurantId, food);

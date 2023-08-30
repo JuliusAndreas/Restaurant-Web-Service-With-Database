@@ -2,10 +2,7 @@ package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 @NamedEntityGraph(

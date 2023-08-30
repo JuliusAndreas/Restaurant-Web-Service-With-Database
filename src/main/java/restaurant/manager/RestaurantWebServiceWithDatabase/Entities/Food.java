@@ -1,5 +1,6 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -52,12 +53,13 @@ public class Food {
     @Column(name = "price")
     private Double price;
 
-    @JsonView(value = Views.Private.class)
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY
+            , cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @JsonView(value = Views.Private.class)
+    @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
     private List<Reservation> reservations;

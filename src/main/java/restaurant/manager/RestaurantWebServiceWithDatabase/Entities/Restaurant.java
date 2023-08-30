@@ -1,11 +1,9 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.ArrayList;
@@ -43,6 +41,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @Entity
 @Table(name = "restaurant")
@@ -58,12 +57,12 @@ public class Restaurant {
     @Column(name = "restaurantName")
     private String restaurantName;
 
-    @JsonView(value = Views.Public.class)
+    @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private List<Food> foods;
+    private List<Food> foods = new ArrayList<>();
 
-    @JsonView(value = Views.Public.class)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;

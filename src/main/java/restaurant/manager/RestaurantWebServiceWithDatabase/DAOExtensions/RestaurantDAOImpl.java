@@ -17,10 +17,11 @@ public class RestaurantDAOImpl implements RestaurantDAO {
     }
 
     @Override
+    @Transactional
     public void update(Integer id, Restaurant restaurant) {
         Restaurant restaurantToBeUpdated = entityManager.find(Restaurant.class, id);
         restaurantToBeUpdated.setRestaurantName(restaurant.getRestaurantName());
-        restaurantToBeUpdated.setOwner(restaurant.getOwner());
+        if (restaurant.getOwner() != null) restaurantToBeUpdated.setOwner(restaurant.getOwner());
         restaurantToBeUpdated.setFoods(restaurant.getFoods());
         entityManager.merge(restaurantToBeUpdated);
     }

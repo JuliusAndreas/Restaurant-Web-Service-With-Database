@@ -43,8 +43,9 @@ public class RestaurantController {
     }
 
     @PostMapping("/")
-    public ResponseEntity addOneRestaurant(@RequestBody Restaurant restaurant) {
-        restaurantService.addOneRestaurant(restaurant);
+    public ResponseEntity addOneRestaurant(@RequestBody Restaurant restaurant,
+                                           @RequestParam Integer ownerId) {
+        restaurantService.addOneRestaurant(restaurant, ownerId);
         return new ResponseEntity<>(new OkResponse("Restaurant successfully added"), HttpStatus.OK);
     }
 
@@ -56,9 +57,8 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteOneRestaurant(@NonNull @PathVariable int id) {
+    public ResponseEntity deleteOneRestaurant(@PathVariable int id) {
         restaurantService.removeOneRestaurant(id);
         return new ResponseEntity<>(new OkResponse("Restaurant succesfully deleted"), HttpStatus.OK);
     }
 }
-

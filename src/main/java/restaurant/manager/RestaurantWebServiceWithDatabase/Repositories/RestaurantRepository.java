@@ -15,8 +15,12 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("select r from Restaurant r WHERE r.id = :queryId")
     Restaurant findByRestaurantId(@Param("queryId") Integer id);
 
-    @Query("SELECT r from Restaurant r JOIN FETCH r.foods JOIN FETCH r.owner")
+    @Query("SELECT r from Restaurant r LEFT JOIN FETCH r.foods JOIN FETCH r.owner")
     List<Restaurant> findAllRestaurantsJoinFetchFoodsOwner();
+
+    @Query("SELECT r from Restaurant r JOIN FETCH r.owner")
+    List<Restaurant> findAllRestaurantsJoinFetchOwner();
+
 
     @Query("SELECT r from Restaurant r JOIN FETCH r.foods")
     List<Restaurant> findAllRestaurantsJoinFetchFoods();
@@ -24,13 +28,12 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("SELECT r from Restaurant r JOIN FETCH r.foods where r.id = :queryId")
     Restaurant findByRestaurantIdJoinFetchFoods(@Param("queryId") Integer id);
 
-    @Query("SELECT r from Restaurant r JOIN FETCH r.foods JOIN FETCH r.owner where r.id = :queryId")
+    @Query("SELECT r from Restaurant r where r.id = :queryId")
     Restaurant findByRestaurantIdJoinFetchFoodsOwner(@Param("queryId") Integer id);
 
     @Query("SELECT f FROM Restaurant r JOIN r.foods f WHERE r.id = :queryId")
     List<Food> getFoodsByRestaurantId(@Param("queryId") Integer id);
 
-    @Query("SELECT res FROM Restaurant r JOIN r.foods f JOIN f.reservations res WHERE r.id = :queryId")
+    @Query("SELECT res FROM Reservation res JOIN Food f JOIN Restaurant r WHERE r.id = :queryId")
     List<Reservation> getReservationsByRestaurantId(@Param("queryId") Integer id);
-
 }

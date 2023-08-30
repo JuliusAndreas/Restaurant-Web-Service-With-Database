@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.FoodRepository;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.RestaurantRepository;
 
@@ -25,7 +27,9 @@ public class FoodService {
     }
 
     public void addFoodToOneRestaurant(@NonNull Integer id, @NonNull Food food) {
-        restaurantRepository.findByRestaurantId(id).add(food);
+        Restaurant targetRestaurant = restaurantRepository.findByRestaurantId(id);
+        food.setRestaurant(targetRestaurant);
+        foodRepository.save(food);
     }
 
     public void updateOneFoodFromOneRestaurant(@NonNull Integer foodId, @NonNull Food food) {
@@ -33,6 +37,9 @@ public class FoodService {
     }
 
     public void removeOneFoodFromOneRestaurant(@NonNull Integer foodId) {
+        if (!foodRepository.existsById(foodId)) {
+            throw new NotFoundException("No Food was found to be deleted");
+        }
         foodRepository.deleteById(foodId);
     }
 }

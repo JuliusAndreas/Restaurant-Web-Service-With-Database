@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepository;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public class UserService {
     }
 
     public void removeOneUser(@NonNull Integer id) {
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException("No User was found to be deleted");
+        }
         userRepository.deleteById(id);
     }
 }
