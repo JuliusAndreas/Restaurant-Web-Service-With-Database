@@ -2,7 +2,10 @@ package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OrderStatus;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
@@ -63,9 +66,14 @@ public class Reservation {
     @Column(name = "status")
     private OrderStatus status;
 
-    public Reservation(Food food, User user, OrderStatus status) {
+    @JsonView(value = Views.Public.class)
+    @Column(name = "quantity")
+    private Integer quantity;
+
+    public Reservation(Food food, User user, OrderStatus status, Integer quantity) {
         this.food = food;
         this.user = user;
         this.status = status;
+        this.quantity = quantity;
     }
 }

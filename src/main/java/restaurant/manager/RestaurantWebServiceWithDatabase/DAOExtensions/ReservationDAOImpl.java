@@ -25,6 +25,7 @@ public class ReservationDAOImpl implements ReservationDAO {
         }
         reservationToBeUpdated.setFood(reservation.getFood());
         reservationToBeUpdated.setUser(reservation.getUser());
+        reservationToBeUpdated.setQuantity(reservation.getQuantity());
         entityManager.merge(reservationToBeUpdated);
     }
 }

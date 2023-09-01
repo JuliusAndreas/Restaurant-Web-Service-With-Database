@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.ForbiddenException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.UserService;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
@@ -36,7 +37,7 @@ public class UserController {
     @JsonView(Views.Public.class)
     public User getUserByID(@PathVariable Integer id) {
         User fetchedUser = userService.fetchOneUser(id);
-        if (fetchedUser == null){
+        if (fetchedUser == null) {
             throw new NotFoundException("No User was found");
         }
         return fetchedUser;
@@ -49,7 +50,12 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateUser(@PathVariable Integer id, @RequestBody User user) {
+    public ResponseEntity updateUser(@PathVariable Integer id,
+                                     @RequestBody User user,
+                                     @RequestAttribute("client-username") String clientUsername) {
+        if (!userService.isUserGivingHisOwnId(clientUsername, id)) {
+            throw new ForbiddenException("Access Denied");
+        }
         userService.updateOneUser(id, user);
         return new ResponseEntity<>(new OkResponse("User successfully updated"), HttpStatus.OK);
     }

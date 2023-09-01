@@ -9,7 +9,6 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.ForbiddenException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.FoodService;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.JwtTokenUtil;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
@@ -21,9 +20,6 @@ public class FoodController {
 
     @Autowired
     private FoodService foodService;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
     @JsonView(value = Views.Public.class)
     @GetMapping("/{restaurantId}")
@@ -40,7 +36,7 @@ public class FoodController {
     }
 
     @PostMapping("/{restaurantId}")
-    public ResponseEntity addFoodToOneRestaurant(@PathVariable int restaurantId,
+    public ResponseEntity addFoodToOneRestaurant(@PathVariable Integer restaurantId,
                                                  @RequestBody Food food,
                                                  @RequestAttribute("client-username") String clientUsername) {
         if (!foodService.isUserTheOwnerOfRestaurant(clientUsername, restaurantId)) {
@@ -53,16 +49,23 @@ public class FoodController {
     @PutMapping("/{restaurantId}/{foodId}")
     public ResponseEntity updateFoodFromOneRestaurant(@PathVariable int restaurantId,
                                                       @PathVariable int foodId,
-                                                      @RequestBody Food food) {
+                                                      @RequestBody Food food,
+                                                      @RequestAttribute("client-username") String clientUsername) {
+        if (!foodService.isUserTheOwnerOfRestaurant(clientUsername, restaurantId)) {
+            throw new ForbiddenException("The user is not the owner of this restaurant so he/she can not add any foods to it.");
+        }
         foodService.updateOneFoodFromOneRestaurant(restaurantId, foodId, food);
         return new ResponseEntity<>(new OkResponse("Food successfully updated"), HttpStatus.OK);
     }
 
     @DeleteMapping("/{restaurantId}/{foodId}")
     public ResponseEntity deleteFoodFromOneRestaurant(@PathVariable int restaurantId,
-                                                      @PathVariable int foodId) {
+                                                      @PathVariable int foodId,
+                                                      @RequestAttribute("client-username") String clientUsername) {
+        if (!foodService.isUserTheOwnerOfRestaurant(clientUsername, restaurantId)) {
+            throw new ForbiddenException("The user is not the owner of this restaurant so he/she can not add any foods to it.");
+        }
         foodService.removeOneFoodFromOneRestaurant(foodId);
         return new ResponseEntity<>(new OkResponse("Food successfully removed"), HttpStatus.OK);
     }
 }
-
