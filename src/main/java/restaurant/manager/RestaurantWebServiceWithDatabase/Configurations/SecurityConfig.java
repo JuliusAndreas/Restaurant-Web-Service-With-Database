@@ -39,10 +39,10 @@ public class SecurityConfig {
 
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST,"/users/").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/").permitAll()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST,"/authenticate").permitAll()
+                .requestMatchers(HttpMethod.POST, "/authenticate").permitAll()
                 .and()
                 .authorizeHttpRequests().anyRequest().authenticated()
                 .and()
@@ -52,19 +52,6 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-        //        return http.csrf().disable()
-//                .authorizeHttpRequests()
-//                .requestMatchers(HttpMethod.POST,"/users/").permitAll()
-//                .and()
-//                .authorizeHttpRequests()
-//                .requestMatchers(HttpMethod.POST,"/authenticate").permitAll()
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authenticationProvider(authenticationProvider())
-//                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
     }
 
     // Password Encoding
