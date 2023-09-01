@@ -1,6 +1,8 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,6 +11,8 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
@@ -18,11 +22,16 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User foundUser = userRepository.findByUsername(username);
+        User foundUser = userRepository.findByUsernameJoinFetch(username);
         if (foundUser == null) {
             throw new RuntimeException("Invalid user");
         }
+        Set<GrantedAuthority> authorities = foundUser
+                .getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
+                .collect(Collectors.toSet());
         return new org.springframework.security.core.userdetails.User(foundUser.getUsername()
-                , foundUser.getPassword(), new ArrayList<>());
+                , foundUser.getPassword(), authorities);
     }
 }

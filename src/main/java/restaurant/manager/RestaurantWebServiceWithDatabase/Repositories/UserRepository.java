@@ -21,6 +21,10 @@ public interface UserRepository extends JpaRepository<User, Integer>, UserDAO {
     @Query("SELECT u FROM User u WHERE u.username = :queryUsername")
     User findByUsername(@Param("queryUsername") String username);
 
+    @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.username = :queryUsername")
+    User findByUsernameJoinFetch(@Param("queryUsername") String username);
+
+
     @Query("SELECT u FROM User u JOIN Reservation res WHERE res.food = :queryFood")
     List<User> findUsersByFood(@Param("queryFood") Food food);
 

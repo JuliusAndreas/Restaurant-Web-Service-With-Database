@@ -19,6 +19,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException exception) {
+        ErrorResponse error = new ErrorResponse();
+        error.setStatus(HttpStatus.FORBIDDEN.value());
+        error.setMessage(exception.getMessage());
+        error.updateTimeStamp();
+
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
         ErrorResponse error = new ErrorResponse();
         error.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -27,5 +37,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+
 
 }

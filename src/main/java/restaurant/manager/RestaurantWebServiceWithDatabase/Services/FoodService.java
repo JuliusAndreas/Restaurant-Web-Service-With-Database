@@ -55,4 +55,9 @@ public class FoodService {
         }
         foodRepository.deleteById(foodId);
     }
+
+    public Boolean isUserTheOwnerOfRestaurant(@NonNull String username, @NonNull Integer restaurantId){
+        Restaurant targetRestaurant = restaurantRepository.findByRestaurantId(restaurantId);
+        return targetRestaurant.getOwner().getUsername().equals(username);
+    }
 }

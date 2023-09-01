@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Role;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepository;
@@ -33,11 +34,17 @@ public class UserService {
     }
 
     public void addOneUser(@NonNull User user) {
+        for (Role role: user.getRoles()) {
+            role.setUser(user);
+        }
         user.setPassword(bcryptEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
     public void updateOneUser(@NonNull Integer id, @NonNull User user) {
+        for (Role role: user.getRoles()) {
+            role.setUser(user);
+        }
         userRepository.update(id, user);
     }
 

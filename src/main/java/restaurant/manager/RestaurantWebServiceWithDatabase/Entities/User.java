@@ -19,6 +19,7 @@ import java.util.Set;
 )
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString
 @Entity
 @Table(name = "users")
