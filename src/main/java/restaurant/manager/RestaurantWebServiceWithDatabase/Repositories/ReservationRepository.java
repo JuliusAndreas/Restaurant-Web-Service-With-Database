@@ -30,6 +30,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     @Query("SELECT res FROM Reservation res WHERE res.food.restaurant.id = :queryId")
     List<Reservation> getReservationsByRestaurantId(@Param("queryId") Integer id, Pageable pageable);
-
-
 }

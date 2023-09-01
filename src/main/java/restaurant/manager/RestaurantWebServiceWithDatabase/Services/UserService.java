@@ -19,6 +19,7 @@ import java.util.List;
 @Service
 public class UserService {
 
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -53,5 +54,10 @@ public class UserService {
             throw new NotFoundException("No User was found to be deleted");
         }
         userRepository.deleteById(id);
+    }
+
+    public Boolean isUserGivingHisOwnId(@NonNull String username, @NonNull Integer userId) {
+        User user = userRepository.findByUserId(userId);
+        return user.getUsername().equals(username);
     }
 }

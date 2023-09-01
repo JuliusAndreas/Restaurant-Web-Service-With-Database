@@ -42,7 +42,7 @@ public class User {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Restaurant> restaurants;
 
     @JsonIgnore
