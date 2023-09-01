@@ -88,8 +88,9 @@ public class ReservationController {
         return new ResponseEntity<>(new OkResponse("Reservation successfully added"), HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity completeOrder(@PathVariable int id){
+    @PatchMapping("/{restaurantId}/{id}")
+    public ResponseEntity completeOrder(@PathVariable int restaurantId,
+                                        @PathVariable int id){
         reservationService.setStatusToCompleted(id);
         return new ResponseEntity<>(new OkResponse("Reservation successfully completed"), HttpStatus.OK);
     }

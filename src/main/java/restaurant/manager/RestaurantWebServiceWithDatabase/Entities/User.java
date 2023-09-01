@@ -7,6 +7,7 @@ import lombok.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;
+import java.util.Set;
 
 @NamedEntityGraph(
         name = "user-graph",
@@ -18,14 +19,13 @@ import java.util.List;
 )
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "users")
 public class User {
 
-    @JsonView(value = Views.Private.class)
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -50,9 +50,16 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
-    public User(String username, String password) {
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Role> roles;
+
+    public User(String username, String password, Set<Role> roles) {
         this.username = username;
         this.password = password;
+        for (Role role : roles) {
+            role.setUser(this);
+        }
+        this.roles = roles;
     }
-
 }
