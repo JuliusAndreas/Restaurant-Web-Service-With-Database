@@ -20,3 +20,6 @@ spring:
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     main:
         banner-mode: 'off'
+
+singleServerConfig:
+    address: "redis://127.0.0.1:${REDIS_PORT:6379}"

@@ -1,11 +1,14 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions;
 
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Reservation;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RestaurantDAOImpl implements RestaurantDAO {
 
@@ -24,5 +27,14 @@ public class RestaurantDAOImpl implements RestaurantDAO {
         if (restaurant.getOwner() != null) restaurantToBeUpdated.setOwner(restaurant.getOwner());
         restaurantToBeUpdated.setFoods(restaurant.getFoods());
         entityManager.merge(restaurantToBeUpdated);
+    }
+
+    @Override
+    public List<Restaurant> findAllByEntityGraph() {
+        EntityGraph entityGraph = entityManager.getEntityGraph("restaurant-graph");
+        Map<String, Object> properties = new HashMap<>();
+        return entityManager.createQuery("select r from Restaurant r", Restaurant.class)
+                .setHint("jakarta.persistence.fetchgraph", entityGraph)
+                .getResultList();
     }
 }

@@ -21,6 +21,10 @@ public class RestaurantService {
     private RestaurantRepository restaurantRepository;
     private UserRepository userRepository;
 
+    public List<Restaurant> fetchAllRestaurantsWithoutPaging() {
+        return restaurantRepository.findAllRestaurantsJoinFetchFoodsOwner();
+    }
+
     public List<Restaurant> fetchAllRestaurants(Integer page, Integer itemsPerPage, String sortedBy) {
         Pageable pageable = PageRequest.of(page, itemsPerPage, Sort.by(sortedBy));
         return restaurantRepository.findAllRestaurants(pageable);
@@ -45,5 +49,9 @@ public class RestaurantService {
             throw new NotFoundException("No Restaurant was found to be deleted");
         }
         restaurantRepository.deleteById(id);
+    }
+
+    public List<Restaurant> findAllByEntityGraph(){
+        return restaurantRepository.findAllByEntityGraph();
     }
 }
