@@ -1,6 +1,7 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 @NoArgsConstructor
 @Setter
 @Getter
+@EqualsAndHashCode
 public final class RestaurantDTO {
 
     @JsonView(Views.Private.class)
@@ -26,10 +28,5 @@ public final class RestaurantDTO {
     public RestaurantDTO(Restaurant restaurant) {
         this.id = restaurant.getId();
         this.restaurantName = restaurant.getRestaurantName();
-    }
-
-    @Override
-    public boolean equals(Object restaurantDTO) {
-        return this.restaurantName.equals(((RestaurantDTO) restaurantDTO).getRestaurantName());
     }
 }

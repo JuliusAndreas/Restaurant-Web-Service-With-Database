@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RedisConfig {
-    @Value("${singleServerConfig.address}")
+    @Value("${redis.singleServerConfig.address}")
     String address;
 
     @Bean

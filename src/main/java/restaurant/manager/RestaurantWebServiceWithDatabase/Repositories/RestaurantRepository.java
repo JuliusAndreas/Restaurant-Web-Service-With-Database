@@ -14,16 +14,14 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("select r from Restaurant r WHERE r.id = :queryId")
     Restaurant findByRestaurantId(@Param("queryId") Integer id);
 
-    @Query("SELECT r.id as id, r.restaurantName as  from Restaurant r")
+    @Query("SELECT r from Restaurant r")
     List<Restaurant> findAllRestaurantsWithoutPaging();
-
 
     @Query("select r from Restaurant r")
     List<Restaurant> findAllRestaurants(Pageable pageable);
 
     @Query("SELECT r from Restaurant r JOIN FETCH r.owner")
     List<Restaurant> findAllRestaurantsJoinFetchOwner();
-
 
     @Query("SELECT r from Restaurant r LEFT JOIN FETCH r.foods")
     List<Restaurant> findAllRestaurantsJoinFetchFoods();

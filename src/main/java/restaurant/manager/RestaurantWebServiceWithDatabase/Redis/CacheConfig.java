@@ -19,7 +19,7 @@ import java.util.Map;
 @EnableCaching
 public class CacheConfig {
 
-    public static String GLOBAL_RESTAURANTS_NAME = "restaurants-from-db";
+    public static String GLOBAL_RESTAURANTS_CACHE_NAME = "restaurants-from-db";
 
     @Autowired
     private RedissonClient client;

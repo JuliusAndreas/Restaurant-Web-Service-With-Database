@@ -8,15 +8,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Redis.CacheConfig;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.FoodQuantity;
 
 @SpringBootApplication
+@EnableScheduling
+@EnableAsync
 public class RestaurantWebServiceWithDatabaseApplication {
-
-    @Value("${singleServerConfig.address}")
-    String address;
     @Autowired
     RedissonClient client;
 
