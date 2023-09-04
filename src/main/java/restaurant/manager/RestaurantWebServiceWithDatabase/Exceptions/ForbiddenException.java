@@ -1,6 +1,6 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions;
 
-public class ForbiddenException extends RuntimeException{
+public class ForbiddenException extends RuntimeException {
     public ForbiddenException(String message) {
         super(message);
     }

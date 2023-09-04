@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.DTOs.RestaurantDTO;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.RestaurantService;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
@@ -33,7 +32,7 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public RestaurantDTO getOneRestaurant(@PathVariable int id) {
         RestaurantDTO fetchedRestaurant = restaurantService.fetchOneRestaurant(id);
-        if (fetchedRestaurant == null){
+        if (fetchedRestaurant == null) {
             throw new NotFoundException("No Restaurant was found");
         }
         return fetchedRestaurant;

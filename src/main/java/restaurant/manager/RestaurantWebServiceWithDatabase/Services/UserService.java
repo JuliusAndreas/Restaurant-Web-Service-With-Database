@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public void addOneUser(@NonNull User user) {
-        for (Role role: user.getRoles()) {
+        for (Role role : user.getRoles()) {
             role.setUser(user);
         }
         user.setPassword(bcryptEncoder.encode(user.getPassword()));
@@ -43,7 +43,7 @@ public class UserService {
     }
 
     public void updateOneUser(@NonNull Integer id, @NonNull User user) {
-        for (Role role: user.getRoles()) {
+        for (Role role : user.getRoles()) {
             role.setUser(user);
         }
         userRepository.update(id, user);
