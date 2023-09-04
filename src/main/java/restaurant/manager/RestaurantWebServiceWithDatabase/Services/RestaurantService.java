@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import restaurant.manager.RestaurantWebServiceWithDatabase.DTOs.RestaurantDTO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Redis.RestaurantCacheManager;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.RestaurantRepository;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepository;
 
@@ -20,9 +22,10 @@ public class RestaurantService {
 
     private RestaurantRepository restaurantRepository;
     private UserRepository userRepository;
+    private RestaurantCacheManager restaurantCacheManager;
 
-    public List<Restaurant> fetchAllRestaurantsWithoutPaging() {
-        return restaurantRepository.findAllRestaurantsJoinFetchFoodsOwner();
+    public List<RestaurantDTO> fetchAllRestaurantsWithoutPaging() {
+        return restaurantRepository.findAllRestaurantsWithoutPaging();
     }
 
     public List<Restaurant> fetchAllRestaurants(Integer page, Integer itemsPerPage, String sortedBy) {
@@ -51,7 +54,7 @@ public class RestaurantService {
         restaurantRepository.deleteById(id);
     }
 
-    public List<Restaurant> findAllByEntityGraph(){
+    public List<Restaurant> findAllByEntityGraph() {
         return restaurantRepository.findAllByEntityGraph();
     }
 }

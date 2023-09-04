@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions.RestaurantDAO;
+import restaurant.manager.RestaurantWebServiceWithDatabase.DTOs.RestaurantDTO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Projections.RestaurantView;
 
 import java.util.List;
 
@@ -14,8 +16,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("select r from Restaurant r WHERE r.id = :queryId")
     Restaurant findByRestaurantId(@Param("queryId") Integer id);
 
-    @Query("SELECT r from Restaurant r")
-    List<Restaurant> findAllRestaurantsJoinFetchFoodsOwner();
+    @Query("SELECT r.id as id, r.restaurantName as  from Restaurant r")
+    List<Restaurant> findAllRestaurantsWithoutPaging();
 
 
     @Query("select r from Restaurant r")

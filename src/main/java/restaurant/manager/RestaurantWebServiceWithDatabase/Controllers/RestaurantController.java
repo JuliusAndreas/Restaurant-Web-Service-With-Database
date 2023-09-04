@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
+import restaurant.manager.RestaurantWebServiceWithDatabase.DTOs.RestaurantDTO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Projections.RestaurantView;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.RestaurantService;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.ErrorResponse;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
@@ -24,10 +26,11 @@ public class RestaurantController {
 
     @JsonView(Views.Public.class)
     @GetMapping("/")
-    public List<Restaurant> getRestaurants(@RequestParam(defaultValue = "0") int page,
+    public List<RestaurantView> getRestaurants(@RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "5") int itemsPerPage,
                                            @RequestParam(defaultValue = "restaurantName") String sortedBy) {
-        List<Restaurant> responseList = restaurantService.fetchAllRestaurants(page, itemsPerPage, sortedBy);
+//        List<Restaurant> responseList = restaurantService.fetchAllRestaurants(page, itemsPerPage, sortedBy);
+        List<RestaurantView> responseList = restaurantService.fetchAllRestaurantsWithoutPaging();
         if (responseList.isEmpty()) {
             throw new NotFoundException("No Restaurant was found");
         }
