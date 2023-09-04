@@ -27,7 +27,6 @@ public class CacheConfig {
     @Bean
     CacheManager cacheManager(RedissonClient redissonClient) {
         Map<String, org.redisson.spring.cache.CacheConfig> config = new HashMap<>();
-
         config.put("testMap", new org.redisson.spring.cache.CacheConfig(24*60*1000, 12*60*1000));
         return new RedissonSpringCacheManager(redissonClient, config);
     }

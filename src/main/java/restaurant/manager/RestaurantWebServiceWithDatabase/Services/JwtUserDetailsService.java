@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
 

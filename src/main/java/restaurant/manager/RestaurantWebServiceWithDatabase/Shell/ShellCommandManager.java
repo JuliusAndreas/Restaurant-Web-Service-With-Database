@@ -13,11 +13,6 @@ public class ShellCommandManager {
 
     private final RestaurantCacheManager restaurantCacheManager;
 
-    @ShellMethod(value = "Add two integers together.")
-    public int ad(int a, int b) {
-        return a + b;
-    }
-
     @Scheduled(cron = "${intervalInCron.fetchRestaurantsFromDBtoCache}")
     @ShellMethod(value = "Fill the restaurants cache with data from database")
     public String fill() {
