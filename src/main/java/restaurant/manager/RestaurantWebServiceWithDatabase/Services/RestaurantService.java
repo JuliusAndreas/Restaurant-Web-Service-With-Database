@@ -10,7 +10,7 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.DTOs.RestaurantDTO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Redis.RestaurantCacheManager;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Mappers.RestaurantMapper;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.RestaurantRepository;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepository;
 
@@ -22,28 +22,39 @@ public class RestaurantService {
 
     private RestaurantRepository restaurantRepository;
     private UserRepository userRepository;
-    private RestaurantCacheManager restaurantCacheManager;
+    private RestaurantMapper restaurantMapper;
+//    private RestaurantCacheManager restaurantCacheManager;
 
     public List<RestaurantDTO> fetchAllRestaurantsWithoutPaging() {
-        return restaurantRepository.findAllRestaurantsWithoutPaging();
+        List<RestaurantDTO> responseList = restaurantMapper.toDTO(restaurantRepository.findAllRestaurantsWithoutPaging());
+        if (responseList.isEmpty()) {
+            throw new NotFoundException("No Restaurant was found");
+        }
+        return responseList;
     }
 
-    public List<Restaurant> fetchAllRestaurants(Integer page, Integer itemsPerPage, String sortedBy) {
+    public List<RestaurantDTO> fetchAllRestaurants(Integer page, Integer itemsPerPage, String sortedBy) {
         Pageable pageable = PageRequest.of(page, itemsPerPage, Sort.by(sortedBy));
-        return restaurantRepository.findAllRestaurants(pageable);
+        List<RestaurantDTO> responseList = restaurantMapper.toDTO(restaurantRepository.findAllRestaurants(pageable));
+        if (responseList.isEmpty()) {
+            throw new NotFoundException("No Restaurant was found");
+        }
+        return responseList;
     }
 
-    public Restaurant fetchOneRestaurant(@NonNull Integer id) {
-        return restaurantRepository.findByRestaurantIdJoinFetchFoodsOwner(id);
+    public RestaurantDTO fetchOneRestaurant(@NonNull Integer id) {
+        return restaurantMapper.toDTO(restaurantRepository.findByRestaurantId(id));
     }
 
-    public void addOneRestaurant(@NonNull Restaurant restaurant, @NonNull Integer ownerId) {
+    public void addOneRestaurant(@NonNull RestaurantDTO restaurantDTO, @NonNull Integer ownerId) {
+        Restaurant restaurant = restaurantMapper.fromDTO(restaurantDTO);
         User owner = userRepository.findByUserId(ownerId);
         restaurant.setOwner(owner);
         restaurantRepository.save(restaurant);
     }
 
-    public void updateOneRestaurant(@NonNull Integer id, @NonNull Restaurant restaurant) {
+    public void updateOneRestaurant(@NonNull Integer id, @NonNull RestaurantDTO restaurantDTO) {
+        Restaurant restaurant = restaurantMapper.fromDTO(restaurantDTO);
         restaurantRepository.update(id, restaurant);
     }
 
@@ -54,7 +65,7 @@ public class RestaurantService {
         restaurantRepository.deleteById(id);
     }
 
-    public List<Restaurant> findAllByEntityGraph() {
-        return restaurantRepository.findAllByEntityGraph();
+    public List<RestaurantDTO> findAllByEntityGraph() {
+        return restaurantMapper.toDTO(restaurantRepository.findAllByEntityGraph());
     }
 }

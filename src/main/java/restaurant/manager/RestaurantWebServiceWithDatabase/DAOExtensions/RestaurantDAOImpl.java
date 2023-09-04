@@ -25,7 +25,6 @@ public class RestaurantDAOImpl implements RestaurantDAO {
         Restaurant restaurantToBeUpdated = entityManager.find(Restaurant.class, id);
         restaurantToBeUpdated.setRestaurantName(restaurant.getRestaurantName());
         if (restaurant.getOwner() != null) restaurantToBeUpdated.setOwner(restaurant.getOwner());
-        restaurantToBeUpdated.setFoods(restaurant.getFoods());
         entityManager.merge(restaurantToBeUpdated);
     }
 

@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import restaurant.manager.RestaurantWebServiceWithDatabase.DTOs.RestaurantDTO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Projections.RestaurantView;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Services.RestaurantService;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.ErrorResponse;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OkResponse;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
@@ -26,21 +23,16 @@ public class RestaurantController {
 
     @JsonView(Views.Public.class)
     @GetMapping("/")
-    public List<RestaurantView> getRestaurants(@RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "5") int itemsPerPage,
-                                           @RequestParam(defaultValue = "restaurantName") String sortedBy) {
-//        List<Restaurant> responseList = restaurantService.fetchAllRestaurants(page, itemsPerPage, sortedBy);
-        List<RestaurantView> responseList = restaurantService.fetchAllRestaurantsWithoutPaging();
-        if (responseList.isEmpty()) {
-            throw new NotFoundException("No Restaurant was found");
-        }
-        return responseList;
+    public List<RestaurantDTO> getRestaurants(@RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "5") int itemsPerPage,
+                                              @RequestParam(defaultValue = "restaurantName") String sortedBy) {
+        return restaurantService.fetchAllRestaurants(page, itemsPerPage, sortedBy);
     }
 
     @JsonView(Views.Public.class)
     @GetMapping("/{id}")
-    public Restaurant getOneRestaurant(@PathVariable int id) {
-        Restaurant fetchedRestaurant = restaurantService.fetchOneRestaurant(id);
+    public RestaurantDTO getOneRestaurant(@PathVariable int id) {
+        RestaurantDTO fetchedRestaurant = restaurantService.fetchOneRestaurant(id);
         if (fetchedRestaurant == null){
             throw new NotFoundException("No Restaurant was found");
         }
@@ -48,16 +40,16 @@ public class RestaurantController {
     }
 
     @PostMapping("/")
-    public ResponseEntity addOneRestaurant(@RequestBody Restaurant restaurant,
+    public ResponseEntity addOneRestaurant(@RequestBody RestaurantDTO restaurantDTO,
                                            @RequestParam Integer ownerId) {
-        restaurantService.addOneRestaurant(restaurant, ownerId);
+        restaurantService.addOneRestaurant(restaurantDTO, ownerId);
         return new ResponseEntity<>(new OkResponse("Restaurant successfully added"), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updateOneRestaurant(@PathVariable int id
-            , @RequestBody Restaurant restaurant) {
-        restaurantService.updateOneRestaurant(id, restaurant);
+            , @RequestBody RestaurantDTO restaurantDTO) {
+        restaurantService.updateOneRestaurant(id, restaurantDTO);
         return new ResponseEntity<>(new OkResponse("Restaurant successfully updated"), HttpStatus.OK);
     }
 

@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import restaurant.manager.RestaurantWebServiceWithDatabase.DAOExtensions.RestaurantDAO;
-import restaurant.manager.RestaurantWebServiceWithDatabase.DTOs.RestaurantDTO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
-import restaurant.manager.RestaurantWebServiceWithDatabase.Projections.RestaurantView;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("SELECT r from Restaurant r JOIN FETCH r.foods where r.id = :queryId")
     Restaurant findByRestaurantIdJoinFetchFoods(@Param("queryId") Integer id);
 
-    @Query("SELECT r from Restaurant r where r.id = :queryId")
+    @Query("SELECT r from Restaurant r JOIN FETCH r.foods JOIN FETCH r.owner where r.id = :queryId")
     Restaurant findByRestaurantIdJoinFetchFoodsOwner(@Param("queryId") Integer id);
 
     @Query(value = "SELECT r.id, r.restaurantname, r.owner_id from reservation res inner join food f on res.food_id = f.id inner join restaurant r on f.restaurant_id = r.id where res.id = :queryId",
