@@ -43,7 +43,6 @@ public class Food {
     private String foodName;
 
     @JsonView(value = Views.Public.class)
-    @Enumerated(EnumType.STRING)
     @Column(name = "foodQuantity")
     private FoodQuantity foodQuantity;
 
