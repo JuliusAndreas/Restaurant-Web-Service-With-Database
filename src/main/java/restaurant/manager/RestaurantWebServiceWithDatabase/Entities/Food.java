@@ -11,6 +11,7 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.FoodQuantit
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;
+import java.util.Objects;
 
 @NamedEntityGraph(
         name = "food-graph",
@@ -30,6 +31,7 @@ import java.util.List;
 @Table(name = "food")
 public class Food {
 
+    @ToString.Exclude
     @JsonView(value = Views.Private.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +54,7 @@ public class Food {
     @Column(name = "price")
     private Double price;
 
+    @ToString.Exclude
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY
             , cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
@@ -68,5 +71,18 @@ public class Food {
         this.foodQuantity = foodQuantity;
         this.rating = rating;
         this.price = price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Food food = (Food) o;
+        return Objects.equals(foodName, food.foodName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(foodName);
     }
 }

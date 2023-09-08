@@ -27,7 +27,7 @@ public class UserDAOImpl implements UserDAO {
                 (!user.getRestaurants().equals(userToBeUpdated.getRestaurants()))) {
             throw new RuntimeException("Can't change the restaurants");
         }
-        if (user.equals(userToBeUpdated)){
+        if (user.equals(userToBeUpdated)) {
             throw new RuntimeException("Updating with same credentials is not allowed");
         }
         userToBeUpdated.setUsername(user.getUsername());

@@ -3,7 +3,10 @@ package restaurant.manager.RestaurantWebServiceWithDatabase.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.List;

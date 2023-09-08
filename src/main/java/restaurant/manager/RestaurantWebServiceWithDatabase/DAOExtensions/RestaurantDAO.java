@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface RestaurantDAO {
     void update(Integer id, Restaurant restaurant);
+
+    List<Restaurant> findAllByEntityGraph();
 }
