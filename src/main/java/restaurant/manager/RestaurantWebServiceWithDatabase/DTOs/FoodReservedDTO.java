@@ -1,14 +1,14 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.DTOs;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
-public final class ReservationDTO {
-    private Integer userId;
+public class FoodReservedDTO {
     private Integer foodId;
+    private String foodName;
     private Integer quantity;
 }

@@ -1,6 +1,7 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,24 +15,12 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.Restaura
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class FoodService {
 
-    private FoodRepository foodRepository;
-    private RestaurantRepository restaurantRepository;
-
-    public List<Food> fetchAllFoodsFromOneRestaurantByName(@NonNull String restaurantName) {
-        return foodRepository.findByRestaurantName(restaurantName);
-    }
-
-    public List<Food> fetchAllFoodsFromOneRestaurantById(@NonNull Integer id,
-                                                         Integer page,
-                                                         Integer itemsPerPage,
-                                                         String sortedBy) {
-        Pageable pageable = PageRequest.of(page, itemsPerPage, Sort.by(sortedBy));
-        return foodRepository.getFoodsByRestaurantId(id, pageable);
-    }
+    private final FoodRepository foodRepository;
+    private final RestaurantRepository restaurantRepository;
 
     public void addFoodToOneRestaurant(@NonNull Integer id, @NonNull Food food) {
         Restaurant targetRestaurant = restaurantRepository.findByRestaurantId(id);
@@ -47,6 +36,16 @@ public class FoodService {
             throw new RuntimeException("This food can not be updated because the specified restaurant does not serve it");
         }
         foodRepository.update(foodId, food);
+    }
+
+    public List<Food> fetchAllFoodsFromOneRestaurantByName(@NonNull String restaurantName) {
+        return foodRepository.findByRestaurantName(restaurantName);
+    }
+
+    public List<Food> fetchAllFoodsFromOneRestaurantById(@NonNull Integer id, Integer page,
+                                                         Integer itemsPerPage, String sortedBy) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage, Sort.by(sortedBy));
+        return foodRepository.getFoodsByRestaurantId(id, pageable);
     }
 
     public void removeOneFoodFromOneRestaurant(@NonNull Integer foodId) {

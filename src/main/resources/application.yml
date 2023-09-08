@@ -8,7 +8,7 @@ logging:
         orm:
           jdbc:
             bind: 'trace'
-    root: warn
+#    root: warn
 spring:
   datasource:
     password: postgres
@@ -28,3 +28,6 @@ redis:
 intervalInCron:
   fetchRestaurantsFromDBtoCache: 0 0 0 * * ?
   flushRestaurantsFromCache: 0 55 0 * * *
+
+server:
+  port: 8080

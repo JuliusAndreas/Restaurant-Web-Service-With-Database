@@ -1,16 +1,19 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import restaurant.manager.RestaurantWebServiceWithDatabase.DTOs.FoodReservedDTO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.DTOs.ReservationDTO;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Food;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Reservation;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.User;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Exceptions.NotFoundException;
+import restaurant.manager.RestaurantWebServiceWithDatabase.Rabbitmq.Sender;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.FoodRepository;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.ReservationRepository;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.RestaurantRepository;
@@ -19,35 +22,16 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.OrderStatus
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class ReservationService {
 
-    private FoodRepository foodRepository;
-    private ReservationRepository reservationRepository;
-    private UserRepository userRepository;
-    private RestaurantRepository restaurantRepository;
-
-    public List<Reservation> fetchAllReservations(Integer page, Integer itemsPerPage) {
-        Pageable pageable = PageRequest.of(page, itemsPerPage);
-        return reservationRepository.findAllReservations(pageable);
-    }
-
-    public Reservation fetchOneReservation(Integer id) {
-        return reservationRepository.findByReservationId(id);
-    }
-
-    public List<Reservation> fetchAllReservationsOfOneRestaurant(Integer page, Integer itemsPerPage,
-                                                                 @NonNull Integer id) {
-        Pageable pageable = PageRequest.of(page, itemsPerPage);
-        return reservationRepository.getReservationsByRestaurantId(id, pageable);
-    }
-
-    public List<Reservation> fetchAllReservationsOfOneUser(Integer page, Integer itemsPerPage,
-                                                           @NonNull Integer id) {
-        Pageable pageable = PageRequest.of(page, itemsPerPage);
-        return reservationRepository.findByUserId(id, pageable);
-    }
+    private final FoodRepository foodRepository;
+    private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final Sender sender;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public void addReservation(@NonNull ReservationDTO reservationDTO) {
         Integer foodId = reservationDTO.getFoodId();
@@ -60,6 +44,13 @@ public class ReservationService {
         }
         Reservation reservation = new Reservation(orderedFood, ordererUser, OrderStatus.ONGOING, quantity);
         reservationRepository.save(reservation);
+        try {
+            byte[] message = objectMapper.writeValueAsBytes(
+                    new FoodReservedDTO(foodId, orderedFood.getFoodName(), quantity));
+            sender.sendBytesMessage(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void updateReservation(@NonNull Integer id, @NonNull ReservationDTO reservationDTO) {
@@ -75,13 +66,6 @@ public class ReservationService {
         reservationRepository.update(id, reservation);
     }
 
-    public void removeOneReservation(@NonNull Integer id) {
-        if (!reservationRepository.existsById(id)) {
-            throw new NotFoundException("No Reservation was found to be deleted");
-        }
-        reservationRepository.deleteById(id);
-    }
-
     public void setStatusToCompleted(@NonNull Integer id) {
         if (!reservationRepository.existsById(id)) {
             throw new NotFoundException("No Reservation was found to be completed");
@@ -94,13 +78,39 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
+    public List<Reservation> fetchAllReservations(Integer page, Integer itemsPerPage) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage);
+        return reservationRepository.findAllReservations(pageable);
+    }
+
+    public Reservation fetchOneReservation(Integer id) {
+        return reservationRepository.findByReservationId(id);
+    }
+
+    public List<Reservation> fetchAllReservationsOfOneRestaurant(Integer page, Integer itemsPerPage, @NonNull Integer id) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage);
+        return reservationRepository.getReservationsByRestaurantId(id, pageable);
+    }
+
+    public List<Reservation> fetchAllReservationsOfOneUser(Integer page, Integer itemsPerPage, @NonNull Integer id) {
+        Pageable pageable = PageRequest.of(page, itemsPerPage);
+        return reservationRepository.findByUserId(id, pageable);
+    }
+
+    public void removeOneReservation(@NonNull Integer id) {
+        if (!reservationRepository.existsById(id)) {
+            throw new NotFoundException("No Reservation was found to be deleted");
+        }
+        reservationRepository.deleteById(id);
+    }
+
+
     public Boolean isUserTheOwnerOfRestaurant(@NonNull String username, @NonNull Integer restaurantId) {
         Restaurant targetRestaurant = restaurantRepository.findByRestaurantId(restaurantId);
         return targetRestaurant.getOwner().getUsername().equals(username);
     }
 
-    public Boolean isUserTheOwnerOfTheOrderedFoodRestaurant(@NonNull String username,
-                                                            @NonNull Integer reservationId) {
+    public Boolean isUserTheOwnerOfTheOrderedFoodRestaurant(@NonNull String username, @NonNull Integer reservationId) {
         Restaurant targetRestaurant = restaurantRepository.findByReservationId(reservationId);
         return targetRestaurant.getOwner().getUsername().equals(username);
     }
@@ -110,8 +120,7 @@ public class ReservationService {
         return user.getUsername().equals(username);
     }
 
-    public Boolean doesReservationBelongToTheRestaurant(@NonNull Integer restaurantId,
-                                                        @NonNull Integer id) {
+    public Boolean doesReservationBelongToTheRestaurant(@NonNull Integer restaurantId, @NonNull Integer id) {
         Reservation reservation = reservationRepository.findByReservationId(id);
         Restaurant restaurant = restaurantRepository.findByRestaurantId(restaurantId);
         for (Food food : restaurant.getFoods()) {

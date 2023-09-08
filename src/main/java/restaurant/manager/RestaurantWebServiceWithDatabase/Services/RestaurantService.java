@@ -2,6 +2,7 @@ package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,14 +19,14 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepo
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class RestaurantService {
 
-    private RestaurantRepository restaurantRepository;
-    private UserRepository userRepository;
-    private RestaurantMapper restaurantMapper;
-    private RestaurantCacheManager restaurantCacheManager;
+    private final RestaurantRepository restaurantRepository;
+    private final UserRepository userRepository;
+    private final RestaurantMapper restaurantMapper;
+    private final RestaurantCacheManager restaurantCacheManager;
 
     public List<RestaurantDTO> fetchAllRestaurantsWithoutPaging() {
         List<RestaurantDTO> responseList = restaurantCacheManager.getRestaurantsCached();

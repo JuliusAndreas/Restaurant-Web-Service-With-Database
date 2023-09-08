@@ -1,6 +1,7 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,15 +16,12 @@ import restaurant.manager.RestaurantWebServiceWithDatabase.Repositories.UserRepo
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder bcryptEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder bcryptEncoder;
 
     public List<User> fetchAllUsers(int page, int itemsPerPage, String sortedBy) {
         Pageable pageable = PageRequest.of(page, itemsPerPage, Sort.by(sortedBy));
