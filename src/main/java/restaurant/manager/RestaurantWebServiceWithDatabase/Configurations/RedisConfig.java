@@ -1,4 +1,4 @@
-package restaurant.manager.RestaurantWebServiceWithDatabase.Redis;
+package restaurant.manager.RestaurantWebServiceWithDatabase.Configurations;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

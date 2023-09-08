@@ -1,4 +1,4 @@
-package restaurant.manager.RestaurantWebServiceWithDatabase.Redis;
+package restaurant.manager.RestaurantWebServiceWithDatabase.Configurations;
 
 import lombok.AllArgsConstructor;
 import org.redisson.api.RedissonClient;
