@@ -13,8 +13,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableAsync
 public class RestaurantWebServiceWithDatabaseApplication {
-    @Autowired
-    RedissonClient client;
 
     public static void main(String[] args) {
         SpringApplication.run(RestaurantWebServiceWithDatabaseApplication.class, args);
