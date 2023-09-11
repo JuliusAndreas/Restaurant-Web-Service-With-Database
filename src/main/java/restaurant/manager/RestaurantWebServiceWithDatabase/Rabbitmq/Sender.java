@@ -19,13 +19,13 @@ public class Sender implements CommandLineRunner {
     }
 
     public Boolean sendStringMessage(String message) {
-        rabbitTemplate.convertAndSend(RestaurantWebServiceWithDatabaseApplication.topicExchangeName,
+        rabbitTemplate.convertAndSend(RabbitConfig.topicExchangeName,
                 "foo.bar.baz", message);
         return true;
     }
 
     public Boolean sendBytesMessage(byte[] message) {
-        rabbitTemplate.convertAndSend(RestaurantWebServiceWithDatabaseApplication.topicExchangeName,
+        rabbitTemplate.convertAndSend(RabbitConfig.topicExchangeName,
                 "foo.bar.baz", message);
         return true;
     }
