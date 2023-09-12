@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.*;
+import org.locationtech.jts.geom.Point;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
 import java.util.ArrayList;
@@ -56,6 +57,9 @@ public class Restaurant {
     @JsonView(value = Views.Public.class)
     @Column(name = "restaurantName")
     private String restaurantName;
+
+    @Column(columnDefinition = "geometry")
+    private Point location;
 
     @JsonIgnore
     @ToString.Exclude

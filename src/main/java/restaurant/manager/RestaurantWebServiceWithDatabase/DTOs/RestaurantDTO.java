@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.locationtech.jts.geom.Point;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Entities.Restaurant;
 import restaurant.manager.RestaurantWebServiceWithDatabase.Utilities.Views;
 
@@ -19,6 +20,9 @@ public final class RestaurantDTO {
 
     @JsonView(Views.Public.class)
     private String restaurantName;
+
+    @JsonView(Views.Public.class)
+    private String location;
 
     public RestaurantDTO(Integer id, String restaurantName) {
         this.id = id;

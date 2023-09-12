@@ -1,5 +1,6 @@
 package restaurant.manager.RestaurantWebServiceWithDatabase.Repositories;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,4 +36,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query(value = "SELECT r.id, r.restaurantname, r.owner_id from reservation res inner join food f on res.food_id = f.id inner join restaurant r on f.restaurant_id = r.id where res.id = :queryId",
             nativeQuery = true)
     Restaurant findByReservationId(@Param("queryId") Integer id);
+
+    @Query(value = "SELECT * FROM restaurant ORDER BY ST_Distance(location, :geom ) LIMIT 3", nativeQuery = true)
+    List<Restaurant> findNearest(final Point geom);
 }
