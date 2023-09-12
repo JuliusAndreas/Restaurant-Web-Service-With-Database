@@ -2,6 +2,7 @@ package restaurant.manager.RestaurantWebServiceWithDatabase.Services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.locationtech.jts.io.ParseException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -59,7 +60,7 @@ public class RestaurantService {
     }
 
     @Transactional(rollbackOn = {Exception.class})
-    public void addOneRestaurant(@NonNull RestaurantDTO restaurantDTO, @NonNull Integer ownerId) {
+    public void addOneRestaurant(@NonNull RestaurantDTO restaurantDTO, @NonNull Integer ownerId) throws ParseException {
         Restaurant restaurant = restaurantMapper.fromDTO(restaurantDTO);
         User owner = userRepository.findByUserId(ownerId);
         restaurant.setOwner(owner);
@@ -68,7 +69,7 @@ public class RestaurantService {
     }
 
     @Transactional(rollbackOn = {Exception.class})
-    public void updateOneRestaurant(@NonNull Integer id, @NonNull RestaurantDTO restaurantDTO) {
+    public void updateOneRestaurant(@NonNull Integer id, @NonNull RestaurantDTO restaurantDTO) throws ParseException {
         restaurantCacheManager.updateRestaurantCached(id, restaurantDTO);
         Restaurant restaurant = restaurantMapper.fromDTO(restaurantDTO);
         restaurantRepository.update(id, restaurant);

@@ -33,10 +33,11 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("SELECT r from Restaurant r JOIN FETCH r.foods JOIN FETCH r.owner where r.id = :queryId")
     Restaurant findByRestaurantIdJoinFetchFoodsOwner(@Param("queryId") Integer id);
 
-    @Query(value = "SELECT r.id, r.restaurantname, r.owner_id from reservation res inner join food f on res.food_id = f.id inner join restaurant r on f.restaurant_id = r.id where res.id = :queryId",
+    @Query(value = "SELECT r.id, r.restaurantname, r.owner_id from reservation res inner join food f" +
+            " on res.food_id = f.id inner join restaurant r on f.restaurant_id = r.id where res.id = :queryId",
             nativeQuery = true)
     Restaurant findByReservationId(@Param("queryId") Integer id);
 
     @Query(value = "SELECT * FROM restaurant ORDER BY ST_Distance(location, :geom ) LIMIT 3", nativeQuery = true)
-    List<Restaurant> findNearest(final Point geom);
+    List<Restaurant> findNearest(@Param("geom") Point geom);
 }
